@@ -1,3 +1,9 @@
+### 参考资料汇总
+
+    create-react-app所有文档: https://github.com/facebook/create-react-app/tree/master/docusaurus/docs
+
+    环境变量配置: https://www.html.cn/create-react-app/docs/adding-custom-environment-variables/
+
 ### 项目初始化
 
     npx create - react - app react_employee_admin
@@ -24,7 +30,6 @@
             ]
         }
 
-
 ### 集成 less
 
     安装:
@@ -36,7 +41,7 @@
 
     修改 config / webpack.config.js 配置
 
-````
+    ```
         const lessRegex = /\.less\$/;
 
         const lessModuleRegex = /\.module\.less\$/;
@@ -270,8 +275,84 @@ transform-origin: @x @y;
 animation:@arg;
 }
 
+```
+
+### 跨域处理
+    插件安装
+        npm install http-proxy-middleware --save
+
+    src目录下创建setupProxy.js文件
+
+    注意:
+        setupProxy.js文件名称如果更改在config/path.js文件下的proxySetup文件夹一定要对应, 字段配置如下
+        proxySetup: resolveApp('src/setupProxy.js'),
+```
+
+// setupProxy.js 文件配置如下
+const {createProxyMiddleware} = require('http-proxy-middleware')
+
+module.exports =  function(app) {
+    app.use(process.env.REACT_APP_API,
+        createProxyMiddleware({
+            target: process.env.REACT_APP_BASE_URL,
+            changeOrigin: true
+        })
+    )
+}
+
 ````
+
+
+### 配置环境变量
+参考资料
+    https://www.html.cn/create-react-app/docs/adding-custom-environment-variables/
+
+安装
+    npm install --save-dev dotenv-cli
+
+创建环境变量配置文件, 配置文件变量名以 REACT_APP_XXX 规范命名
+    .env.development
+        REACT_APP_API = "/devApi"
+        REACT_APP_BASE_URL = "http://localhost:5000"
+    .env.production
+    .env.test
+
+package.json文件scripts字段中加入以下配置
+````
+
+"build:dev": "dotenv -e .env.development react-app-rewired build"
+"build:pro": "dotenv -e .env.production react-app-rewired build"
+"build:test": "dotenv -e .env.test react-app-rewired build"
 
 ```
 
+### axios使用
+    安装
+        npm install --save axios
+
+    封装请求和响应拦截 创建utils/request.js文件
+```
+import axios from 'axios'
+
+const http = axios.create({
+    baseUrl: process.env.REACT_APP_API,
+    timeout: 5000
+})
+
+// Add a request interceptor
+http.interceptors.request.use(function (config) {
+    console.log(process.env.NODE_ENV)
+    return config;
+}, function (error) {
+    return Promise.reject(error);
+});
+
+// Add a response interceptor
+http.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    return Promise.reject(error);
+});
+
+export default http
 ```
