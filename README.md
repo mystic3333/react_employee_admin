@@ -14,6 +14,7 @@
         npm install--save antd babel - plugin -import
 
     配置 package.json 文件
+    ```
         "babel": {
             "presets": [
             "react-app"
@@ -29,6 +30,7 @@
             ]
             ]
         }
+    ```
 
 ### 集成 less
 
@@ -80,8 +82,7 @@
 
 ### 初始化 css 样式
 
-    ```
-
+```
 @charset "gb2312";
 /_ CSS Document _/
 html,body,h1,h2,h3,h4,h5,h6,div,dl,dt,dd,ul,ol,li,p,blockquote,pre,hr,figure,table,caption,th,td,form,fieldset,legend,input,button,textarea,menu{margin:0;padding:0;}
@@ -278,6 +279,7 @@ animation:@arg;
 ```
 
 ### 跨域处理
+
     插件安装
         npm install http-proxy-middleware --save
 
@@ -286,6 +288,7 @@ animation:@arg;
     注意:
         setupProxy.js文件名称如果更改在config/path.js文件下的proxySetup文件夹一定要对应, 字段配置如下
         proxySetup: resolveApp('src/setupProxy.js'),
+
 ```
 
 // setupProxy.js 文件配置如下
@@ -299,38 +302,42 @@ module.exports =  function(app) {
         })
     )
 }
-
-````
-
+```
 
 ### 配置环境变量
+
 参考资料
-    https://www.html.cn/create-react-app/docs/adding-custom-environment-variables/
+https://www.html.cn/create-react-app/docs/adding-custom-environment-variables/
 
 安装
-    npm install --save-dev dotenv-cli
+npm install --save-dev dotenv-cli
 
 创建环境变量配置文件, 配置文件变量名以 REACT_APP_XXX 规范命名
+
+```
     .env.development
         REACT_APP_API = "/devApi"
         REACT_APP_BASE_URL = "http://localhost:5000"
     .env.production
     .env.test
+```
 
-package.json文件scripts字段中加入以下配置
-````
+package.json 文件 scripts 字段中加入以下配置
 
+```
 "build:dev": "dotenv -e .env.development react-app-rewired build"
 "build:pro": "dotenv -e .env.production react-app-rewired build"
 "build:test": "dotenv -e .env.test react-app-rewired build"
 
 ```
 
-### axios使用
+### axios 使用
+
     安装
         npm install --save axios
 
     封装请求和响应拦截 创建utils/request.js文件
+
 ```
 import axios from 'axios'
 
