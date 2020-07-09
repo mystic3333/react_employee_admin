@@ -363,3 +363,40 @@ http.interceptors.response.use(function (response) {
 
 export default http
 ```
+
+### rem 自适应布局配置代码
+
+在 public/index.html 中加入这段代码
+
+```
+<script>
+    (function (width) {
+    var doc = width.document,
+        element = doc.documentElement,
+        i = 750,
+        d = i / 100,
+        o = "orientationchange" in width ? "orientationchange" : "resize",
+        a = function () {
+        var width = element.clientWidth || 320;
+        width > 750 && (width = 750);
+        element.style.fontSize = width / d + "px"
+        };
+    doc.addEventListener && (width.addEventListener(o, a, !1), doc.addEventListener("DOMContentLoaded", a, !1))
+    })(window);
+</script>
+```
+
+### nodemon 服务器代码热更新
+
+安装
+npm install -g nodemon
+npm install --save nodemon
+
+使用
+package.json 中修改 scripts 启动命令
+
+```
+"scripts": {
+    "start": "nodemon ./server.js"
+}
+```
