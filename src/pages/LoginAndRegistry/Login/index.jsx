@@ -15,8 +15,10 @@ const tailLayout = {
 
 export default class Login extends React.Component {
   onSubmitHandle = () => {
-    // axios.get('http://localhost:5000/user/login')
     LoginApi.login()
+    LoginApi.getCode().then(res => {
+      console.log(res)
+    })
   };
 
   onFinish = (values) => {

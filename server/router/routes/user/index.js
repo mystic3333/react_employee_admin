@@ -7,7 +7,7 @@ router.get('/login', function(req, res) {
     })
 })
 
-router.get('/code', function(req, res) {
+router.get('/getCode', function(req, res) {
     res.send({
         code: 0,
         msg: 'success',

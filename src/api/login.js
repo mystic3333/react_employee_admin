@@ -1,18 +1,17 @@
 import http from '../utils/request'
-import config from '../config'
 
-export function login(params) {   
+const baseUrl = process.env.REACT_APP_BASE_URL
+
+export function login() {   
     return http({
-        url: 'http://localhost:5000/user/code',
-        method: 'get',
-        params
+        url: '/api/user/login',
+        method: 'get'
     })
 }
 
-// export function getLoginCode(data) {
-//     return http({
-//         url: '/getSms',
-//         method: 'post',
-//         data
-//     })
-// }
+export function getCode() {
+    return http({
+        url: '/api/user/getCode',
+        method: 'get'
+    })
+}
