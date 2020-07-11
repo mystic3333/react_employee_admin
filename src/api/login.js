@@ -2,10 +2,11 @@ import http from '../utils/request'
 
 const baseUrl = process.env.REACT_APP_BASE_URL
 
-export function login() {   
+export function login(params) {   
     return http({
         url: '/api/user/login',
-        method: 'get'
+        method: 'get',
+        params
     })
 }
 

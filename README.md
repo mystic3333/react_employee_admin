@@ -294,14 +294,16 @@ animation:@arg;
 // setupProxy.js 文件配置如下
 const {createProxyMiddleware} = require('http-proxy-middleware')
 
-module.exports =  function(app) {
-    app.use(process.env.REACT_APP_API,
-        createProxyMiddleware({
-            target: process.env.REACT_APP_BASE_URL,
-            changeOrigin: true
+module.exports = function(app) {
+    app.use(createProxyMiddleware('/api', {
+            target: 'http://localhost:5000',
+            changeOrigin: true,
+            pathRewrite: {
+                "/api": ""
+            }
         })
     )
-}
+} 
 ```
 
 ### 配置环境变量
@@ -400,3 +402,17 @@ package.json 中修改 scripts 启动命令
     "start": "nodemon ./server.js"
 }
 ```
+
+### [server端] body-parser使用
+安装:
+    npm install --save body-parser
+
+在server.js入口文件全局引用
+```
+const bodyParser = require('body-parser')
+app.use(bodyParser.json())
+```
+
+### [vscode技巧] 快速定位文件方法
+
+Ctrl + p 打开搜索框, 输入需要定位的文件名称, 即可快速定位, 提高开发效率
