@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
-const router = require('./router/index.js')
+const router = require('./src/router/index.js')
 
 app.use(bodyParser.json())
 app.use('/',router)

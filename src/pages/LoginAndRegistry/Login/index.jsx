@@ -1,7 +1,7 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 import { isEmpty, fromPairs } from "lodash";
 import * as LoginApi from "../../../api/login";
-// import axios from 'axios'
 
 import { Form, Input, Button, Checkbox, Row, Col, message, Space } from "antd";
 import { UserOutlined, LockOutlined, CodepenOutlined } from "@ant-design/icons";
@@ -14,7 +14,9 @@ const tailLayout = {
   wrapperCol: { offset: 1, span: 22 },
 };
 
-export default class Login extends React.Component {
+let timer = null;
+
+class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,14 +33,32 @@ export default class Login extends React.Component {
     };
   }
 
-  onSubmitHandle = () => {};
-
   onFinish = (values) => {
+    if (timer && timer !== null) {
+      this.setState({
+        codeDisable: true,
+      });
+    }
     const { username, password, code } = values;
+
+    LoginApi.login(values)
+    .then((res) => {
+      if (res && res.data.type === 'success') {
+        this.props.history.replace('/home')
+      } else {
+        message.warning(res.data.errMsg)
+      }
+    })
+    // this.props.history.replace('/home')
   };
 
   onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
+    if (timer && timer !== null) {
+      this.setState({
+        codeDisable: true,
+      });
+    }
   };
 
   onChangeHandle = (e) => {
@@ -63,7 +83,9 @@ export default class Login extends React.Component {
 
       LoginApi.getCode()
         .then((res) => {
+          console.log(res)
           this.countDown();
+          message.success(`验证码: ${res.data.data.uid}`)
         })
         .catch((e) => {
           this.setState({
@@ -75,15 +97,13 @@ export default class Login extends React.Component {
   };
 
   countDown = () => {
-    let timer = null;
     let count = 60;
 
     this.setState({
-      codeLoading: false
-    })
+      codeLoading: false,
+    });
 
     timer = setInterval(() => {
-      
       count--;
       if (count <= 0) {
         this.setState({
@@ -91,7 +111,7 @@ export default class Login extends React.Component {
           codeDisable: false,
         });
         clearInterval(timer);
-        return false
+        return false;
       }
 
       this.setState({
@@ -101,7 +121,7 @@ export default class Login extends React.Component {
   };
 
   componentWillUnmount() {
-
+    clearInterval(timer);
   }
 
   render() {
@@ -201,3 +221,5 @@ export default class Login extends React.Component {
     );
   }
 }
+
+export default withRouter(Login);

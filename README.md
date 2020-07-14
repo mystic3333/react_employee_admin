@@ -303,7 +303,7 @@ module.exports = function(app) {
             }
         })
     )
-} 
+}
 ```
 
 ### 配置环境变量
@@ -403,16 +403,32 @@ package.json 中修改 scripts 启动命令
 }
 ```
 
-### [server端] body-parser使用
-安装:
-    npm install --save body-parser
+### [server 端] body-parser 使用
 
-在server.js入口文件全局引用
+安装:
+npm install --save body-parser
+
+在 server.js 入口文件全局引用
+
 ```
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 ```
 
-### [vscode技巧] 快速定位文件方法
+### [vscode 开发技巧] 快速定位文件方法
 
 Ctrl + p 打开搜索框, 输入需要定位的文件名称, 即可快速定位, 提高开发效率
+
+
+### [前端] 组件状态切换
+```
+
+```
+
+### [git操作] 创建新的分支并推送代码
+```
+git add .
+git commmit -m ''
+git checkout -b newBranch
+git push --set-upstream newBranch
+```
