@@ -21,6 +21,12 @@ const routes = [
         component: '',
         children: [
             {
+                path: '/home/user/default',
+                name: '用户首页',
+                icon:  OrderedListOutlined,
+                component: ''
+            },
+            {
                 path: '/home/user/list',
                 name: '用户列表',
                 icon:  OrderedListOutlined,
@@ -31,7 +37,7 @@ const routes = [
                 name: '添加用户',
                 icon:  UserAddOutlined,
                 component: ''
-            },
+            }
         ]
     },
     {
@@ -43,8 +49,8 @@ const routes = [
     {
         path: '/home/position',
         name: '职位管理',
-        icon: '',
-        component:  WalletOutlined
+        icon: WalletOutlined,
+        component: ''
     }
 ]
 
