@@ -1031,3 +1031,12 @@ export default class HeaderView extends React.Component {
 }
 
 ```
+
+### [git] 合并分支
+```
+git checkout master
+git merge develop_branch
+git add .
+git commit -m 'xxxx/xx/xx'
+git push -u origin master
+```
