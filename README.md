@@ -933,3 +933,101 @@ class AsideView extends React.Component {
 }
 export default withRouter(AsideView)
 ```
+
+### 导航菜单的显示隐藏
+
+```
+- home.jsx文件
+
+import React from "react";
+// less
+import "./style.less";
+
+// 组件
+import AsideView from "./AsideView";
+import ContentView from "./ContentView";
+import HeaderView from "./HeaderView";
+
+// antd
+import { Layout } from "antd";
+
+const { Sider, Header, Content } = Layout;
+
+export default class Home extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      isCollapsed: true
+    }
+  }
+
+  toggleCollapsed = () => {
+    this.setState({ isCollapsed: !this.state.isCollapsed })
+  }
+
+  render() {
+    const {isCollapsed} = this.state
+    return (
+      <Layout style={{ height: "100vh" }}>
+        <Header style={{ padding: "0" }} >
+          <HeaderView isCollapsed={isCollapsed} toggleCollapsed={() => this.toggleCollapsed()}/>
+        </Header >
+        <Layout>
+          <Sider collapsed={isCollapsed}>
+            <AsideView />
+          </Sider>
+          <Content>
+            <ContentView />
+          </Content>
+        </Layout>
+      </Layout>
+    );
+  }
+}
+
+
+- HeaderView.jsx文件
+import React, { Fragment } from "react";
+
+// icon
+import {
+  MenuFoldOutlined
+} from '@ant-design/icons'
+
+// css
+import "./style.less";
+
+export default class HeaderView extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      isCollapsed: props.isCollapsed
+    }
+  }
+
+  onCollapseIconClick = () => {
+    this.props.toggleCollapsed()
+  }
+
+  componentWillReceiveProps(props) {
+    const {isCollapsed} = props
+    this.setState({isCollapsed})
+  }
+
+  render() {
+    const {isCollapsed} = this.state
+    return (
+      <div className="header_container">
+        <div className={isCollapsed ? 'close' : 'logo'}>
+          <div className="logo_img">logo</div>
+        </div>
+        <div className="header_content">
+            <MenuFoldOutlined onClick={this.onCollapseIconClick} style={{fontSize: '24px', marginLeft: '10px'}}/>
+            header
+        </div>
+      </div>
+    );
+  }
+}
+
+```
