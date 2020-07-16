@@ -34,6 +34,7 @@ class Login extends React.Component {
   }
 
   onFinish = (values) => {
+    clearInterval(timer)
     if (timer && timer !== null) {
       this.setState({
         codeDisable: true,
@@ -44,6 +45,8 @@ class Login extends React.Component {
     LoginApi.login(values)
     .then((res) => {
       if (res && res.data.type === 'success') {
+        // 将token进行缓存
+        localStorage.setItem('token', res.data.token)
         this.props.history.replace('/home')
       } else {
         message.warning(res.data.errMsg)
@@ -54,7 +57,8 @@ class Login extends React.Component {
 
   onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
-    if (timer && timer !== null) {
+    const {codeDisable} = this.state
+    if (codeDisable) {
       this.setState({
         codeDisable: true,
       });
@@ -90,6 +94,7 @@ class Login extends React.Component {
         .catch((e) => {
           this.setState({
             buttonText: "失败请重试",
+            codeLoading: false,
             codeDisable: false,
           });
         });

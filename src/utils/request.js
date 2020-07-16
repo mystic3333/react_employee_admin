@@ -7,8 +7,13 @@ const http = axios.create({
 
 // Add a request interceptor
 http.interceptors.request.use(function (config) {
-    console.log('2',process.env.REACT_APP_BASE_URL)
-    console.log('1',process.env.REACT_APP_API)
+    const token = localStorage.getItem('token')
+    if (token) {
+    config.headers.authorization = `mystic ${token}`
+
+    } else {
+        config.headers.authorization = ''
+    }
 
     return config;
 }, function (error) {

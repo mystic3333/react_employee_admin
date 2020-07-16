@@ -2,6 +2,8 @@ const express = require('express')
 const uuid = require('uuid')
 const router = express.Router()
 const userModel = require('../../../models/user')
+const utils = require('../../../utils')
+const constant = require('../../../constant')
 
 let serverCode = null
 
@@ -12,9 +14,13 @@ router.get('/login', function (req, res) {
     if (serverCode === code) {
         userModel.findUser(sql, username)
         .then(data => {
+            const {id, username} = data[0]
             if (data && data.length > 0) {
+                // 签发token
+                const token = utils.signToken({id, username}, constant.SECRET)
                 res.send({
-                    type: 'success'
+                    type: 'success',
+                    token
                 })
             }
         })
@@ -25,7 +31,6 @@ router.get('/login', function (req, res) {
             errMsg: '验证码错误'
         })
     }
-    
 })
 
 router.get('/getCode', function (req, res) {

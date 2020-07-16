@@ -419,16 +419,407 @@ app.use(bodyParser.json())
 
 Ctrl + p 打开搜索框, 输入需要定位的文件名称, 即可快速定位, 提高开发效率
 
-
 ### [前端] 组件状态切换
-```
 
 ```
 
-### [git操作] 创建新的分支并推送代码
+```
+
+### [git 操作] 创建新的分支并推送代码
+
 ```
 git add .
 git commmit -m ''
 git checkout -b newBranch
 git push --set-upstream newBranch
+```
+
+### [react] 组件的分类
+
+无状态组件
+有状态组件
+ui 组件
+容器组件
+高阶组件
+回调渲染
+
+### [javascript] 倒计时逻辑
+
+```
+ countDown = () => {
+    let timer = null;
+    let count = 60;
+
+    this.setState({
+      codeLoading: false
+    })
+
+    timer = setInterval(() => {
+
+      count--;
+      if (count <= 0) {
+        this.setState({
+          buttonText: "重新获取",
+          codeDisable: false,
+        });
+        clearInterval(timer);
+        return false
+      }
+
+      this.setState({
+        buttonText: `发送成功${count}S`,
+      });
+    }, 1000);
+  };
+```
+
+### 私有化组件
+
+src/components/PrivateRouter
+
+```
+import React from "react";
+import { Route, Redirect } from "react-router-dom";
+
+const PrivateRouter = ({component: Component, ...rest}) => {
+  return (
+      <Route
+        {...rest}
+        render = {(routeProps) => (
+            true ? <Component {...routeProps} /> : <Redirect to="/" />
+        )}
+      ></Route>
+  )
+};
+
+export default PrivateRouter
+```
+
+./App.jsx
+
+```
+import React from "react";
+import { Switch, HashRouter as Router, Route, Redirect } from "react-router-dom";
+import Home from "./pages/Home";
+import LoginAndRegistry from './pages/LoginAndRegistry'
+import PrivateRouter from "./components/PrivateRouter";
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <div className="app">
+        <Router>
+          <Switch>
+            <Route exact path="/" component={LoginAndRegistry}></Route>
+            <PrivateRouter path="/home" component={Home} ></PrivateRouter>
+          </Switch>
+        </Router>
+      </div>
+    );
+  }
+}
+
+```
+
+### 签发 jwt, 解码 jwt
+
+安装
+npm install --save jsonwebtoken jwt-decode
+
+```
+const jwt = require('jsonwebtoken')
+const jwtDecode = require('jwt-decode')
+
+function signToken(payload, secret) {
+    const token = jwt.sign(payload, secret, {
+        expiresIn: 60 * 60
+    })
+    return token
+}
+
+function decode(token) {
+    return jwtDecode(token)
+}
+
+module.exports = {
+    signToken,
+    decode
+}
+```
+
+### jwt 校验请求头配置
+
+客户端每次请求的时候都会携带 token 进行请求
+
+```
+import axios from 'axios'
+
+const http = axios.create({
+    baseUrl: '/api',
+    timeout: 5000
+})
+
+// Add a request interceptor
+http.interceptors.request.use(function (config) {
+    const token = localStorage.getItem('token')
+    if (token) {
+    config.headers.authorization = `mystic ${token}`
+
+    } else {
+        config.headers.authorization = ''
+    }
+
+    return config;
+}, function (error) {
+    return Promise.reject(error);
+});
+
+// Add a response interceptor
+http.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    return Promise.reject(error);
+});
+
+export default http
+```
+
+### 判断登录状态进行 login 和 dashboard 页面切换
+
+```
+import React from "react";
+import {
+  Switch,
+  HashRouter as Router,
+  Route,
+  Redirect,
+} from "react-router-dom";
+import Home from "./pages/Home";
+import LoginAndRegistry from "./pages/LoginAndRegistry";
+import PrivateRouter from "./components/PrivateRouter";
+import Login from "./pages/LoginAndRegistry/Login";
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <div className="app">
+        <Router>
+          <Switch>
+            <Route
+              exact
+              path="/"
+              component={() => {
+                return (
+                  localStorage.getItem('token') ? <Home/> : <LoginAndRegistry />
+                )
+              }}
+            ></Route>
+            <PrivateRouter path="/home" component={Home}></PrivateRouter>
+          </Switch>
+        </Router>
+      </div>
+    );
+  }
+}
+
+```
+
+### Dashboard layout 布局
+
+```
+import React from "react";
+// less
+import "./style.less";
+
+// 组件
+import Aside from "./Aside";
+
+// antd
+import { Layout } from "antd";
+
+const { Sider, Header, Content } = Layout;
+
+export default class Home extends React.Component {
+  render() {
+    return (
+      <Layout style={{ height: '100vh' }}>
+        <Header>header</Header>
+        <Layout>
+          <Sider style={{ width: "238"}}>
+            <Aside />
+          </Sider>
+          <Content>content</Content>
+        </Layout>
+      </Layout>
+    );
+  }
+}
+
+```
+
+### 路由表
+
+```
+import {
+    ControlOutlined,
+    UserOutlined,
+    OrderedListOutlined,
+    UserAddOutlined,
+    TagOutlined,
+    WalletOutlined
+} from '@ant-design/icons'
+
+const routes = [
+    {
+        path: '/home',
+        name: '控制台',
+        icon:  ControlOutlined,
+        component: ''
+    },
+    {
+        path: '/home/user',
+        name: '用户管理',
+        icon: UserOutlined,
+        component: '',
+        children: [
+            {
+                path: '/home/user/list',
+                name: '用户列表',
+                icon:  OrderedListOutlined,
+                component: ''
+            },
+            {
+                path: '/home/user/add',
+                name: '添加用户',
+                icon:  UserAddOutlined,
+                component: ''
+            },
+        ]
+    },
+    {
+        path: '/home/department',
+        name: '部门管理',
+        icon:  TagOutlined,
+        component: ''
+    },
+    {
+        path: '/home/position',
+        name: '职位管理',
+        icon: '',
+        component:  WalletOutlined
+    }
+]
+
+export default routes
+
+```
+
+### 根据路由表自动生成左侧菜单
+
+```
+// react相关模块
+import React, { Fragment } from "react";
+import { Link } from "react-router-dom";
+
+// 路由表
+import routes from "../../../router";
+
+// css
+import "./style.less";
+// antd
+import { Menu } from "antd";
+import {
+  PieChartOutlined,
+  ContainerOutlined,
+  MailOutlined,
+} from "@ant-design/icons";
+
+const { SubMenu } = Menu;
+
+export default class AsideView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      routes,
+    };
+  }
+
+  routerMapNoChildren = (route) => {
+    return (
+      <Menu.Item key={route.path} icon={<PieChartOutlined />}>
+        <Link to={route.path}>{route.name}</Link>
+      </Menu.Item>
+    );
+  };
+
+  routerMapHasChildren = (route) => {
+    return (
+      <SubMenu key={route.name} icon={<PieChartOutlined />} title={route.name}>
+        {route.children.map((item, index) => {
+          return item.children && item.children.length > 0
+            ? this.routerMapNoChildren(item)
+            : this.routerMapNoChildren(item);
+        })}
+      </SubMenu>
+    );
+  };
+
+  render() {
+    const { routes } = this.state;
+    return (
+      <div className="menu_wrapper">
+        <Menu
+          defaultSelectedKeys={["1"]}
+          defaultOpenKeys={["sub1"]}
+          mode="inline"
+          theme="dark"
+        >
+          {routes.map((route, index) => {
+            return route.children && route.children.length > 0
+              ? this.routerMapHasChildren(route)
+              : this.routerMapNoChildren(route);
+          })}
+        </Menu>
+      </div>
+    );
+  }
+}
+
+```
+
+### RouterView 路由内容切换
+
+```
+import React, {Fragment} from 'react'
+// 路由
+import {Switch, Route} from 'react-router-dom'
+
+// 组件
+import PrivateRouter from '../../../components/PrivateRouter'
+import User from './User'
+import UserAdd from './User/UserAdd'
+import UserList from './User/UserList'
+import Control from './Control'
+import Department from './Department'
+import Position from './Position'
+import NotFound from '../../NotFound'
+
+// css
+import './style.less'
+
+export default class ContentView extends React.Component {
+    render() {
+        return (
+            <Switch>
+                <PrivateRouter exact path="/home" component={Control}></PrivateRouter>
+                <PrivateRouter exact path="/home/user" component={User}></PrivateRouter>
+                <PrivateRouter exact path="/home/user/add" component={UserAdd}></PrivateRouter>
+                <PrivateRouter exact path="/home/user/list" component={UserList}></PrivateRouter>
+                <PrivateRouter exact path="/home/department" component={Department}></PrivateRouter>
+                <PrivateRouter exact path="/home/position" component={Position}></PrivateRouter>
+                <PrivateRouter path="*" component={NotFound}></PrivateRouter>
+            </Switch>
+        )
+    }
+}
 ```

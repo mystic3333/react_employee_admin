@@ -1,23 +1,33 @@
 import React from "react";
-import { Layout } from 'antd';
-
-const {Header, Sider, Content} = Layout
+// less
+import "./style.less";
 
 // 组件
-// import Sider from "./Sider";
-// import Header from "./Header";
-// import Content from "./Content";
+import AsideView from "./AsideView";
+import ContentView from "./ContentView";
+import HeaderView from "./HeaderView";
+
+// antd
+import { Layout } from "antd";
+
+const { Sider, Header, Content } = Layout;
 
 export default class Home extends React.Component {
   render() {
     return (
-      <Layout>
-      <Header>Header</Header>
-      <Layout>
-        <Sider>Sider</Sider>
-        <Content>Content</Content>
+      <Layout style={{ height: "100vh" }}>
+        <Header style={{ padding: "0" }}>
+          <HeaderView />
+        </Header>
+        <Layout>
+          <Sider>
+            <AsideView />
+          </Sider>
+          <Content>
+            <ContentView />
+          </Content>
+        </Layout>
       </Layout>
-    </Layout>
     );
   }
 }
