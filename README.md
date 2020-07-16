@@ -806,7 +806,7 @@ import NotFound from '../../NotFound'
 
 // css
 import './style.less'
-
+ 
 export default class ContentView extends React.Component {
     render() {
         return (
