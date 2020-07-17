@@ -58,6 +58,7 @@ class AsideView extends React.Component {
   // default接口抽离, 店家下拉导航, 默认打开default页面
   onOpenChangeHandle = (openKeys) => {
     console.log(openKeys)
+    this.props.history.push(`${openKeys[openKeys.length - 1]}/default`)
     this.setState({
       openKeys: [openKeys[openKeys.length - 1]],
       selectedKeys: [`${openKeys[openKeys.length - 1]}/default`]

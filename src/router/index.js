@@ -9,7 +9,7 @@ import {
 
 const routes = [
     {
-        path: '/home',
+        path: '/home/control',
         name: '控制台',
         icon:  ControlOutlined,
         component: ''

@@ -2,7 +2,8 @@ import React, { Fragment } from "react";
 
 // icon
 import {
-  MenuFoldOutlined
+  MenuFoldOutlined,
+  MenuUnfoldOutlined
 } from '@ant-design/icons'
 
 // css
@@ -33,8 +34,12 @@ export default class HeaderView extends React.Component {
           <div className="logo_img">logo</div>
         </div>
         <div className="header_content">
+          {
+            isCollapsed ? 
+            <MenuUnfoldOutlined onClick={this.onCollapseIconClick} style={{fontSize: '24px', marginLeft: '10px'}}/>
+            :
             <MenuFoldOutlined onClick={this.onCollapseIconClick} style={{fontSize: '24px', marginLeft: '10px'}}/>
-            header
+          }
         </div>
       </div>
     );
