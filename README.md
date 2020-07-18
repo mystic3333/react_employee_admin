@@ -1033,6 +1033,7 @@ export default class HeaderView extends React.Component {
 ```
 
 ### [git] 合并分支
+
 ```
 git checkout master
 git merge develop_branch
@@ -1042,7 +1043,9 @@ git push -u origin master
 ```
 
 ### [前端自动化] require.context
-/pages/ContentView/component.js文件
+
+/pages/ContentView/component.js 文件
+
 ```
 const files = require.context(".", true, /\.jsx$/);
 // console.log('files',files.keys())
@@ -1068,4 +1071,85 @@ files.keys().map((item, index) => {
 });
 
 export default components
+```
+
+### [server 端] express 全局异常处理中间件
+
+安装插件
+npm install --save boom
+
+使用的中间件
+route.use(function(err, req, res, next)){}
+
+```
+const express = require('express')
+const router = express.Router()
+const userRouter = require('./routes/user')
+const departmentRouter = require('./routes/department')
+const { JsonWebTokenError } = require('jsonwebtoken')
+
+
+router.use(function (req, res, next) {
+    console.log('请求前中间件')
+    next()
+})
+
+router.use('/user', userRouter)
+router.use('/department', departmentRouter)
+
+// 全局异常处理中间件
+router.use(function (err, req, res, next) {
+    if (err) {
+        const { statusCode, error, message } = err.output.payload
+        res.status(statusCode).json({
+            error,
+            message
+        })
+    } else {
+        next()
+    }
+})
+
+
+module.exports = router
+```
+
+### [server端] 统一结果返回类
+/utils/Result.js 文件
+```
+class Result {
+    code = 0
+    msg = ''
+    data = {}
+    options = null
+    constructor(msg, data = {}, code = 0, options = {}) {
+        this.code = code
+        this.msg = msg
+        this.data = data
+        this.options = options
+    }
+
+    buildSuccess(res = null, code = 0) {
+
+        if (Object.prototype.toString.call(res) === '[object Object]') {
+            res.status(200).json({
+                code: code || this.code,
+                type: 'success',
+                msg: this.msg,
+                data: this.data
+            })
+        }
+    }
+    buildFail(res = null, code = -1) {
+        if (Object.prototype.toString.call(res) === '[object Object]') {
+            res.status(200).json({
+                code: code || this.code,
+                type: 'fail',
+                msg: this.msg
+            })
+        }
+    }
+}
+
+module.exports = Result
 ```

@@ -21,6 +21,19 @@ function queryOne(sql, params=[]) {
     })
 }
 
+function insert(sql, params=[]) {
+    return new Promise((resolve, reject) => {
+        db.query(sql, params, (errors, result, fields) => {
+            if (errors) {
+                reject(errors)
+            } else {
+                resolve(result)
+            }
+        })
+    })
+}
+
 module.exports = {
-    queryOne
+    queryOne,
+    insert
 }

@@ -44,7 +44,21 @@ const routes = [
         path: '/home/department',
         name: '部门管理',
         icon:  TagOutlined,
-        component: ''
+        component: '',
+        children: [
+            {
+                path: '/home/department/default',
+                name: '增加部门',
+                icon:  TagOutlined,
+                component: ''
+            },
+            {
+                path: '/home/department/list',
+                name: '部门列表',
+                icon:  TagOutlined,
+                component: ''
+            }
+        ]
     },
     {
         path: '/home/position',

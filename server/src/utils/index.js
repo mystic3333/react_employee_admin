@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const jwtDecode = require('jwt-decode')
+const Result = require('./Result')
 
 function signToken(payload, secret) {    
     const token = jwt.sign(payload, secret, {
@@ -14,5 +15,6 @@ function decode(token) {
 
 module.exports = {
     signToken,
-    decode
+    decode,
+    Result
 }
